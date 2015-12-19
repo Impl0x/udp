@@ -1,0 +1,13 @@
+[package]
+name = "udp"
+version = "0.1.0"
+authors = ["alex"]
+
+[[bin]]
+name = "udp_client"
+path = "src/client.rs"
+
+[[bin]]
+name = "udp_server"
+path = "src/server.rs"
+
