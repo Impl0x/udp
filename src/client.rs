@@ -30,7 +30,7 @@ fn main() {
     }
 
     for i in 0..1000000 {
-        let msg = Message::new(i, "Hello there!");
+        let msg = Message::new(i, format!("{} says: Hello there!", i).trim());
         let mut buf = {
             let mut encoded = Message::encode(&msg).unwrap();
             (&mut encoded[..]).to_owned()

@@ -29,8 +29,16 @@ fn main() {
     loop {
         match socket.recv_from(&mut buf) {
             Ok((num_bytes, _)) => {
-                let msg = Message::decode(&buf[0..num_bytes]);
-                println!("Got: {:?}", msg);
+                match Message::decode(&buf[0..num_bytes]) {
+                    Ok(msg) => {
+                        println!("Got: {:?}", msg);
+                    },
+                    Err(e) => {
+                        println!("Decode error: {}", e);
+                        drop(socket);
+                        return;
+                    }
+                }
             },
             Err(e) => {
                 println!("Receive error: {}", e);
