@@ -29,10 +29,10 @@ fn main() {
         }
     }
 
-    for i in 0..10000000 {
+    for i in 0..1000000 {
+        let msg = Message::new(i, "Hello there!");
         let mut buf = {
-            let msg = Message::new(i, "Hello there!");
-            let mut encoded = Message::encode(msg).unwrap();
+            let mut encoded = Message::encode(&msg).unwrap();
             (&mut encoded[..]).to_owned()
         };
 
@@ -40,7 +40,7 @@ fn main() {
         match socket.send_to(&mut buf, serv_addr) {
             Ok(s) => {
                 println!("Sent {} bytes to {:?}", s, serv_addr);
-                println!("Sent: {:?}", buf);
+                println!("{:?}", msg);
             },
             Err(e) => {
                 println!("Send error: {}", e);
