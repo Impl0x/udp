@@ -29,7 +29,7 @@ fn main() {
         }
     }
 
-    for i in 0..10 {
+    for i in 0..10000000 {
         let mut buf = {
             let msg = Message::new(i, "Hello there!");
             let mut encoded = Message::encode(msg).unwrap();

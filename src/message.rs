@@ -4,7 +4,7 @@ use bincode::rustc_serialize::{EncodingResult, DecodingResult};
 
 #[derive(Debug, RustcEncodable, RustcDecodable, PartialEq)]
 pub struct Message {
-    num: u16,
+    num: u64,
     body: String,
 }
 
