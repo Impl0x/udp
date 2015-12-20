@@ -1,7 +1,13 @@
+extern crate rustc_serialize;
+extern crate bincode;
+
+mod message;
+
+use message::{Message};
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, UdpSocket}; 
 
 fn main() {
-    let mut buf = [0; 10];
+    let mut buf: [u8; 1024]  = [0; 1024];
 
     let local_ip = Ipv4Addr::new(0,0,0,0);
     let port = 12345;
@@ -21,15 +27,10 @@ fn main() {
     }
 
     loop {
-        // Wait to receive a message
-        let src_addr: SocketAddr;
-        let num_bytes;
         match socket.recv_from(&mut buf) {
-            Ok((n, src)) => {
-                println!("Got {} bytes from {}", n, src);
-                println!("Got: {:?}", buf);
-                src_addr = src;
-                num_bytes = n;
+            Ok((num_bytes, _)) => {
+                let msg = Message::decode(&buf[0..num_bytes]);
+                println!("Got: {:?}", msg);
             },
             Err(e) => {
                 println!("Receive error: {}", e);
@@ -37,23 +38,5 @@ fn main() {
                 return;
             }
         }
-
-        // Reverse the bytes in the received message
-        let mut buf = &mut buf[..num_bytes];
-        buf.reverse();
-
-        // Attempt to send the reversed message back to the sender
-        match socket.send_to(&mut buf, src_addr) {
-            Ok(s) => {
-                println!("Sent {} bytes to {:?}", s, src_addr);
-                println!("Sent: {:?}", buf);
-            },
-            Err(e) => {
-                println!("Send error: {}", e);
-                drop(socket);
-                return;
-            }
-        }
-        println!("");
     }
 }
